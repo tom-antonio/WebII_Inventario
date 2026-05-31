@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>Consulta de Itens</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+        <style>
+            #consulta {
+                max-width: 820px;
+                margin: 60px auto;
+            }
+        </style>
+    </head>
+<body>
+    <main class="container">
+        <section id="consulta">
+            <h1>Consulta</h1>
+            {% if inventario %}
+                <table role="grid">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Preço</th>
+                            <th>Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produto in inventario %}
+                            <tr>
+                                <td>{{ produto.id }}</td>
+                                <td>{{ produto.nome }}</td>
+                                <td>{{ 'R$ {:.2f}'.format(produto.preco) }}</td>
+                                <td>{{ produto.quantidade }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Nenhum produto cadastrado.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

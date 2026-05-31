@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "nome": "Manga",
+        "preco": 4.66,
+        "quantidade": 34
+    },
+    {
+        "id": 2,
+        "nome": "Maracujá",
+        "preco": 5.66,
+        "quantidade": 12
+    },
+    {
+        "id": 3,
+        "nome": "Mamão",
+        "preco": 8.99,
+        "quantidade": 56
+    },
+    {
+        "id": 4,
+        "nome": "Uva",
+        "preco": 40.0,
+        "quantidade": 5
+    },
+    {
+        "id": 5,
+        "nome": "Melancia",
+        "preco": 4.55,
+        "quantidade": 21
+    }
+]

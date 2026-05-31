@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cadastro de Produtos</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+        <style>
+            #formulario, #resultado {
+                max-width: 420px;
+                margin: 60px auto;
+            }
+
+            #resultado a[role="button"] {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+                text-align: center;
+            }
+        </style>
+    </head>
+<body>
+    <main class="container">
+        <section id="formulario">
+            <h1>Cadastro de Produtos</h1>
+            <form action="{{ url_for('cadastro') }}" method="POST">
+                <div>
+                    <p><input type="text" name="nome" placeholder="Nome do Produto" required></p>
+                    <p>
+                        <!-- Foi necessário adicionar o atributo pattern para validar o formato do preço,
+                         não sei porque, mas no Safari ficava aceitando caracteres -->
+                        <input id="preco" type="text" name="preco" placeholder="Preço" required inputmode="decimal" step="0.01" min="0"
+                            pattern="^\d+(\.\d{2,})?$">
+                    </p>
+                    <p>
+                        <input id="quantidade" type="number" name="quantidade" placeholder="Quantidade" required inputmode="numeric" step="1" min="0"
+                            pattern="\d+">
+                    </p>
+
+                </div>
+                <button type="submit" id="contrast">Cadastrar Produto</button>
+                <section id="resultado">
+                    <p>
+                        <a href="{{ url_for('consulta') }}" target="_blank" rel="noopener" role="button">Consultar itens Cadastrados</a>
+                    </p>
+                    <p>
+                        <a href="{{ url_for('pesquisar') }}" target="_blank" rel="noopener" role="button">Pesquisar Produtos</a>
+                    </p>
+                </section>
+            </form>
+        </section>
+    </main>
+    <script>
+
+        // Função para limpar e formatar a entrada no campo preço
+        function cleanNumberInput(str){
+            if(!str) return '';
+            str = String(str).replace(',', '.');
+            str = str.replace(/[^0-9.]/g,'');
+            const parts = str.split('.');
+            if(parts.length > 1){
+                return parts[0] + '.' + parts.slice(1).join('');
+            }
+            return str;
+        }
+
+        function onPrecoInput(ev){
+            ev.target.value = cleanNumberInput(ev.target.value);
+        }
+
+        function onPrecoBlur(ev){
+            let v = cleanNumberInput(ev.target.value);
+            if(!v) { ev.target.value = ''; return; }
+            if(v.indexOf('.') === -1){
+                v = v + '.00';
+            } else {
+                const [intPart, decPart=''] = v.split('.');
+                let dp = decPart;
+                if(dp.length < 2) dp = dp.padEnd(2,'0');
+                v = intPart + '.' + dp;
+            }
+            ev.target.value = v;
+        }
+
+        function onQuantidadeInput(ev){
+            ev.target.value = ev.target.value.replace(/\D/g,'');
+        }
+
+        document.addEventListener('DOMContentLoaded', function(){
+            const preco = document.getElementById('preco');
+            if(preco){
+                preco.addEventListener('input', onPrecoInput);
+                preco.addEventListener('blur', onPrecoBlur);
+            }
+            const quantidade = document.getElementById('quantidade');
+            if(quantidade){
+                quantidade.addEventListener('input', onQuantidadeInput);
+            }
+        });
+    </script>
+</body>
+</html>

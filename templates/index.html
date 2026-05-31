@@ -2,29 +2,40 @@
 <html lang="pt-br">
     <head>
         <meta charset="UTF-8">
-        <title>Inventário</title>
+        <title>Tradição Tech Store</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
         <style>
-            #formulario, #resultado, #grafico, #historico {
+            #inventario {
                 max-width: 420px;
                 margin: 60px auto;
+            }
+
+            #inventario a[role="button"] {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+                text-align: center;
             }
         </style>
     </head>
 <body>
     <main class="container">
-        <section id="formulario">
-            <h1>Inventário</h1>
-            <form action="{{ url_for('adicionar') }}" method="POST">
-                <div>
-                    <p><input type="text" name="nome" placeholder="Nome do Produto" required></p>
-                    <p><input type="number" name="preco" placeholder="Preço" required inputmode="decimal" step="1"></p>
-                    <p><input type="number" name="quantidade" placeholder="Quantidade" required inputmode="numeric" step="1"></p>
-                </div>
-                <button type="submit" id="contrast">Cadastrar Produto</button>
-            </form>
-        </section>
+        <section id="inventario">
+            <h1>Tradição Tech Store</h1>
+                <p>Sistema de Gestão de Inventário</p>
+            <p>
+                <a href="{{ url_for('cadastro') }}" target="_blank" rel="noopener" role="button">Cadastrar Produtos</a>
+            </p>
 
+            <p>
+                <a href="{{ url_for('consulta') }}" target="_blank" rel="noopener" role="button">Consultar itens Cadastrados</a>
+            </p>
+
+            <p>
+                <a href="{{ url_for('pesquisar') }}" target="_blank" rel="noopener" role="button">Pesquisar Produtos</a>
+            </p>
+        </section>
     </main>
 </body>
 </html>
+

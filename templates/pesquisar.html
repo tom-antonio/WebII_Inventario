@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>Pesquisar Produtos</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+        <style>
+            #pesquisar-section {
+                max-width: 420px;
+                margin: 60px auto;
+            }
+        </style>
+    </head>
+<body>
+    <main class="container">
+        <section id="pesquisar-section">
+            <h1>Pesquisar Produtos</h1>
+            <div>
+                <p><input type="text" id="pesquisar" name="nome" placeholder="Digite o nome do Produto"></p>
+            </div>
+        </section>
+
+        <section id="consulta">
+            <h1>Resultados</h1>
+            <table role="grid">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Preço</th>
+                        <th>Quantidade</th>
+                    </tr>
+                </thead>
+                <tbody id="results">
+                    <!-- resultados serão injetados aqui -->
+                </tbody>
+            </table>
+            <p id="empty" style="display:none">Nenhum produto encontrado.</p>
+        </section>
+
+    </main>
+    <script>
+        // Função para formatar o preço como moeda brasileira
+        function formatPrice(v){
+            return 'R$ ' + Number(v).toFixed(2);
+        }
+
+        // Função para renderizar os resultados na tabela
+        function renderResults(items){
+            const tbody = document.getElementById('results');
+            const empty = document.getElementById('empty');
+            tbody.innerHTML = '';
+            if(!items || items.length === 0){
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            items.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = '<td>' + p.id + '</td>' +
+                               '<td>' + (p.nome || '') + '</td>' +
+                               '<td>' + formatPrice(p.preco || 0) + '</td>' +
+                               '<td>' + (p.quantidade || 0) + '</td>';
+                tbody.appendChild(tr);
+            });
+        }
+        // Função de debounce para limitar a frequência das requisições enquanto o usuário digita
+        function debounce(fn, ms){
+            let t;
+            return function(...args){
+                clearTimeout(t);
+                t = setTimeout(()=> fn.apply(this, args), ms);
+            }
+        }
+        // Função para buscar produtos na API com base na query de pesquisa
+        async function fetchProdutos(q){
+            const url = '/api/produtos?q=' + encodeURIComponent(q || '');
+            try{
+                const res = await fetch(url);
+                if(!res.ok) throw new Error('network');
+                const data = await res.json();
+                renderResults(data);
+            }catch(e){
+                console.error('Erro ao buscar produtos', e);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function(){
+            const input = document.getElementById('pesquisar');
+            const deb = debounce((ev) => fetchProdutos(ev.target.value), 250);
+            input.addEventListener('input', deb);
+            // carrega todos inicialmente
+            fetchProdutos('');
+        });
+    </script>
+</body>
+</html>
